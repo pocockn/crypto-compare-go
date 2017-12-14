@@ -7,7 +7,7 @@ import (
 
 	"github.com/labstack/echo"
 
-	"go-echo-vue/models"
+	"crypto-compare-go/models"
 )
 
 // allows us to return an arbitary JSON response

@@ -3,13 +3,13 @@ package handler
 import (
 	"net/http"
 	"net/http/httptest"
-	"testing"
 	"strings"
+	"testing"
+
+	"crypto-compare-go/models"
 
 	"github.com/labstack/echo"
 	"github.com/stretchr/testify/assert"
-	"go-echo-vue/models"
-	"net/http/cgi"
 )
 
 var (

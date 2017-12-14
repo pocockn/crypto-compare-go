@@ -12,51 +12,55 @@ package main
 import (
 	"database/sql"
 
+	"crypto-compare-go/handlers"
+
+	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 	_ "github.com/mattn/go-sqlite3"
 )
 
-// func main() {
+func main() {
 
-// 	db := initDB("storage.db")
-// 	migrate(db)
+	db := initDB("storage.db")
+	migrate(db)
 
-// 	// Create a new instance of Echo
-// 	// e := is short hand for var e =
-// 	e := echo.New()
-// 	e.Use(middleware.Logger())
-// 	e.Use(middleware.Recover())
+	// Create a new instance of Echo
+	// e := is short hand for var e =
+	e := echo.New()
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 
-// 	// CORS default
-// 	// Allows requests from any origin with GET,HEAD,PUT,POST,DELETE
-// 	// e.Use(middleware.CORS())
+	// CORS default
+	// Allows requests from any origin with GET,HEAD,PUT,POST,DELETE
+	// e.Use(middleware.CORS())
 
-// 	// CORS restricted
-// 	// allow request from any localhost address
-// 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-// 		AllowOrigins: []string{"http://localhost:5000"},
-// 		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
-// 	}))
+	// CORS restricted
+	// allow request from any localhost address
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"http://localhost:5000"},
+		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
+	}))
 
-// 	//This is a static html file that will contain our VueJS client code.
-// 	// We can serve up static files using the 'File' function.
-// 	e.File("/", "public/index.html")
+	//This is a static html file that will contain our VueJS client code.
+	// We can serve up static files using the 'File' function.
+	e.File("/", "public/index.html")
 
-// 	// Use the handlers within our handler package
+	// Use the handlers within our handler package
 
-// 	// Similar to Ratpack handler, route takes a pattern and then
-// 	// a handler function as param
-// 	e.GET("/tasks", handlers.GetTasks(db))
+	// Similar to Ratpack handler, route takes a pattern and then
+	// a handler function as param
+	e.GET("/tasks", handlers.GetTasks(db))
 
-// 	// In GOLang the type comes after variable
-// 	// eg context is of type echo.Context
-// 	e.PUT("/tasks", handlers.PutTasks(db))
+	// In GOLang the type comes after variable
+	// eg context is of type echo.Context
+	e.PUT("/tasks", handlers.PutTasks(db))
 
-// 	e.DELETE("/tasks/:id", handlers.DeleteTask(db))
+	e.DELETE("/tasks/:id", handlers.DeleteTask(db))
 
-// 	// Start the web server
-// 	e.Start(":8000")
+	// Start the web server
+	e.Start(":8000")
 
-// }
+}
 
 func initDB(filepath string) *sql.DB {
 	db, err := sql.Open("sqlite3", filepath)

@@ -1,6 +1,7 @@
 package models
 
-type coin struct {
+// Coin represents a specific CryptoCurrency
+type Coin struct {
 	ID                  string `json:"Id"`
 	URL                 string `json:"Url"`
 	ImageURL            string `json:"ImageUrl"`

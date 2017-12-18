@@ -48,6 +48,8 @@ func main() {
 		return context.JSON(http.StatusOK, api.FetchCoinList())
 	})
 
+	e.GET("/coin", handlers.GetCoin)
+
 	// Use the handlers within our handler package
 
 	// Similar to Ratpack handler, route takes a pattern and then

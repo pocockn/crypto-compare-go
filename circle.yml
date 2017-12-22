@@ -1,0 +1,27 @@
+machine:
+  services:
+    - docker
+  environment:
+    GOPATH: /home/ubuntu/.go_workspace
+    IMPORT_PATH: github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
+
+general:
+  build_dir: ../.go_workspace/src/$IMPORT_PATH
+
+ checkout:
+  post:
+    - mkdir -p "$GOPATH/src/$IMPORT_PATH"
+    - rsync -azC --delete $HOME/$CIRCLE_PROJECT_REPONAME/ $GOPATH/src/$IMPORT_PATH/
+
+ test:
+  override:
+    - go test
+
+ deployment:
+  prod:
+    branch: master
+    commands:
+      - heroku plugins:install heroku-container-registry
+      - heroku container:login
+      - CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o artifact .
+      - heroku container:push web --app go-vidsy-project             

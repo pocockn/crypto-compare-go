@@ -8,17 +8,17 @@ machine:
 general:
   build_dir: ../.go_workspace/src/$IMPORT_PATH
 
- checkout:
+checkout:
   post:
     - mkdir -p "$GOPATH/src/$IMPORT_PATH"
     - rsync -azC --delete $HOME/$CIRCLE_PROJECT_REPONAME/ $GOPATH/src/$IMPORT_PATH/
 
- test:
+test:
   override:
     - go test
-
+    
 deployment:
   prod:
     branch: master
     commands:
-      - make push      
+      - make push

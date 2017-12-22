@@ -17,11 +17,8 @@ general:
   override:
     - go test
 
- deployment:
+deployment:
   prod:
     branch: master
     commands:
-      - heroku plugins:install heroku-container-registry
-      - heroku container:login
-      - CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o artifact .
-      - heroku container:push web --app go-vidsy-project             
+      - make push      

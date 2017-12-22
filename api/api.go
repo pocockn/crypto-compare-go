@@ -1,12 +1,13 @@
 package api
 
 import (
-	"crypto-compare-go/models"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	"github.com/pocockn/crypto-compare-go/models"
 )
 
 // Response represents the response from the CryptoCompare API

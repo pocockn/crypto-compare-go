@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"crypto-compare-go/models"
+	"github.com/pocockn/crypto-compare-go/models"
 
 	"github.com/labstack/echo"
 	"github.com/stretchr/testify/assert"

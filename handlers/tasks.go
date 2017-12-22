@@ -7,7 +7,7 @@ import (
 
 	"github.com/labstack/echo"
 
-	"crypto-compare-go/models"
+	"github.com/pocockn/crypto-compare-go/models"
 )
 
 // allows us to return an arbitary JSON response

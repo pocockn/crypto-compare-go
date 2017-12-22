@@ -10,9 +10,11 @@ package main
  */
 
 import (
-	"crypto-compare-go/api"
-	"crypto-compare-go/handlers"
 	"net/http"
+
+	"github.com/pocockn/crypto-compare-go/handlers"
+
+	"github.com/pocockn/crypto-compare-go/api"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"

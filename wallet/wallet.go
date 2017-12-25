@@ -18,3 +18,8 @@ func NewWallet(initialCoinAndUnit map[string]int) *Wallet {
 func (wallet *Wallet) SpecificBalance(coin string) int {
 	return wallet.CoinsHeld[coin]
 }
+
+// Withdraw will take out some units from the specific coin
+func (wallet *Wallet) Withdraw(coin string, amount int) {
+	wallet.CoinsHeld[coin] -= amount
+}

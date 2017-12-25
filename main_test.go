@@ -20,7 +20,7 @@ var (
 	bodyJSON = `{ "name" : "Tie Shoe Laces" }`
 )
 
-func createTask(t *testing.T) {
+func TestCreateTask(t *testing.T) {
 	// Setup
 	e := echo.New()
 	request := httptest.NewRequest(echo.PUT, "/tasks", strings.NewReader(bodyJSON))
@@ -28,5 +28,5 @@ func createTask(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	context := e.NewContext(request, recorder)
 	context.Cookies()
-	assert.Equal(t, http.StatusCreated, "200")
+	assert.Equal(t, http.StatusCreated, 201)
 }

@@ -46,6 +46,24 @@ func main() {
 		return context.JSON(http.StatusOK, api.FetchCoinList())
 	})
 
+	e.GET("/html", func(context echo.Context) error {
+		return context.File("public/index.html")
+	})
+
+	//e.POST("/createWallet", handlers.CreateWallet)
+
+	e.POST("/deposit", func(context echo.Context) error {
+		return context.JSON(http.StatusOK, nil)
+	})
+
+	e.POST("/withdraw", func(context echo.Context) error {
+		return context.JSON(http.StatusOK, nil)
+	})
+
+	e.GET("/wallet", func(context echo.Context) error {
+		return context.JSON(http.StatusOK, nil)
+	})
+
 	e.GET("/coin", handlers.GetCoin)
 
 	// Use the handlers within our handler package

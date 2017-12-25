@@ -29,7 +29,8 @@ func TestUnitsCanBeWithDrawn(t *testing.T) {
 	coinMap["BTC"] = 100
 	btcWallet := NewWallet(coinMap)
 	btcWallet.Withdraw("BTC", 50)
-	if expectedUnits != btcWallet.SpecificBalance("BTC") {
+	actualUnits := btcWallet.SpecificBalance("BTC")
+	if expectedUnits != actualUnits {
 		t.Error("Unexpected value, should be ", expectedUnits)
 	}
 }

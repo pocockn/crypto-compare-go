@@ -22,8 +22,8 @@ func GetCoin(context echo.Context) error {
 // CreateWallet initialises a user wallet based on one coin and some initial units
 func CreateWallet(c echo.Context) error {
 	coinMap := make(map[string]int)
-	coin := c.Param("coin")
-	units, err := strconv.Atoi(c.Param("units"))
+	coin := c.QueryParam("coin")
+	units, err := strconv.Atoi(c.QueryParam("units"))
 	if err != nil {
 		fmt.Println("error creating wallet")
 	}

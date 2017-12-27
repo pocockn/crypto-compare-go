@@ -10,16 +10,64 @@ package main
  */
 
 import (
+	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/pocockn/crypto-compare-go/handlers"
 
 	"github.com/pocockn/crypto-compare-go/api"
+	"github.com/pocockn/crypto-compare-go/wallet"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	_ "github.com/mattn/go-sqlite3"
 )
+
+// CreateWallet initialises a user wallet based on one coin and some initial units
+func createWallet(c echo.Context) error {
+	coinMap := make(map[string]int)
+	coin := c.QueryParam("coin")
+	units, err := strconv.Atoi(c.QueryParam("units"))
+	if err != nil {
+		fmt.Println("error creating wallet")
+	}
+	coinMap[coin] = units
+	btcWallet := wallet.NewWallet(coinMap)
+	return c.JSON(http.StatusCreated, btcWallet)
+}
+
+func depositFunds(c echo.Context) error {
+	// for now lets just create a new wallet
+	// Next step is to find the wallet based on the ID and deposit to it
+	coinMap := make(map[string]int)
+	coin := c.QueryParam("coin")
+	units, err := strconv.Atoi(c.QueryParam("units"))
+	if err != nil {
+		fmt.Println("error creating wallet")
+	}
+	coinMap[coin] = units
+	btcWallet := wallet.NewWallet(coinMap)
+	btcWallet.Deposit(coin, units)
+	return c.JSON(http.StatusCreated, btcWallet)
+}
+
+func withdrawFunds(c echo.Context) error {
+	// for now lets just create a new wallet with a base amount
+	// And withdraw from that amount
+	coinMap := make(map[string]int)
+	coin := "BTC"
+	units := 100
+	coinMap[coin] = units
+	btcWallet := wallet.NewWallet(coinMap)
+	coinFromQuery := c.QueryParam("coin")
+	units, err := strconv.Atoi(c.QueryParam("units"))
+	if err != nil {
+		return c.Render(http.StatusBadRequest, "Bad request", units)
+	}
+	btcWallet.Withdraw(coinFromQuery, units)
+	return c.JSON(http.StatusOK, btcWallet)
+}
 
 func main() {
 
@@ -40,8 +88,7 @@ func main() {
 		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
 	}))
 
-	//This is a static html file that will contain our VueJS client code.
-	// We can serve up static files using the 'File' function.
+	// Fetchs a list of coins from the cryptocompare API
 	e.GET("/", func(context echo.Context) error {
 		return context.JSON(http.StatusOK, api.FetchCoinList())
 	})
@@ -50,23 +97,17 @@ func main() {
 		return context.File("public/index.html")
 	})
 
-	//e.POST("/createWallet", handlers.CreateWallet)
+	e.GET("/createWallet", createWallet)
 
-	e.POST("/deposit", func(context echo.Context) error {
-		return context.JSON(http.StatusOK, nil)
-	})
+	e.POST("/deposit", depositFunds)
 
-	e.POST("/withdraw", func(context echo.Context) error {
-		return context.JSON(http.StatusOK, nil)
-	})
+	e.POST("/withdraw", withdrawFunds)
 
 	e.GET("/wallet", func(context echo.Context) error {
 		return context.JSON(http.StatusOK, nil)
 	})
 
 	e.GET("/coin", handlers.GetCoin)
-
-	// Use the handlers within our handler package
 
 	// Similar to Ratpack handler, route takes a pattern and then
 	// a handler function as param

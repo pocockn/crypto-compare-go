@@ -23,3 +23,8 @@ func (wallet *Wallet) SpecificBalance(coin string) int {
 func (wallet *Wallet) Withdraw(coin string, amount int) {
 	wallet.CoinsHeld[coin] -= amount
 }
+
+// Deposit will deposit some units to a specific coin
+func (wallet *Wallet) Deposit(coin string, amount int) {
+	wallet.CoinsHeld[coin] += amount
+}

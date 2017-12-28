@@ -1,12 +1,7 @@
 package wallet
 
-import (
-	"github.com/pocockn/crypto-compare-go/uuid"
-)
-
 // Wallet will hold the users coins
 type Wallet struct {
-	ID string
 	// Map of Coins the key being the coin name
 	// value being the units held
 	CoinsHeld map[string]int
@@ -15,7 +10,6 @@ type Wallet struct {
 // NewWallet Create a new wallet with an intial coin and unit amount
 func NewWallet(initialCoinAndUnit map[string]int) *Wallet {
 	return &Wallet{
-		ID:        uuid.NewUUID(),
 		CoinsHeld: initialCoinAndUnit,
 	}
 }

@@ -1,9 +1,14 @@
 package models
 
 import (
+	"log"
+
 	"github.com/go-pg/pg"
+	"github.com/go-pg/pg/orm"
+	"github.com/pocockn/crypto-compare-go/wallet"
 )
 
+// DB is a global variable for accessing the DB
 var DB *pg.DB
 
 // InitDB intialises the postgres DB and stores it in a global variable
@@ -13,4 +18,20 @@ func InitDB() {
 		User:     "pocockn",
 		Password: "only8deb",
 	})
+
+	err := createSchema()
+	if err != nil {
+		panic(err)
+	}
+}
+
+func createSchema() error {
+	err := DB.CreateTable(&wallet.Wallet{}, &orm.CreateTableOptions{
+		IfNotExists: true,
+	})
+	if err != nil {
+		return err
+	}
+	log.Println("Database schema created")
+	return nil
 }

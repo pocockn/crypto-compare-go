@@ -2,11 +2,8 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
-
-	"github.com/go-pg/pg/orm"
 
 	"github.com/pocockn/crypto-compare-go/handlers"
 	"github.com/pocockn/crypto-compare-go/models"
@@ -23,11 +20,6 @@ import (
 
 func main() {
 	models.InitDB()
-	err := createSchema(models.DB)
-
-	if err != nil {
-		panic(err)
-	}
 
 	// Create a new instance of Echo
 	e := echo.New()
@@ -41,12 +33,7 @@ func main() {
 		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
 	}))
 
-	// Fetchs a list of coins from the cryptocompare API
 	e.GET("/", func(context echo.Context) error {
-		return context.JSON(http.StatusOK, api.FetchCoinList())
-	})
-
-	e.GET("/html", func(context echo.Context) error {
 		return context.File("public/index.html")
 	})
 
@@ -63,6 +50,11 @@ func main() {
 			panic(err)
 		}
 		return context.JSON(200, wallets)
+	})
+
+	// Fetchs a list of coins from the cryptocompare API
+	e.GET("/allCoins", func(context echo.Context) error {
+		return context.JSON(http.StatusOK, api.FetchCoinList())
 	})
 
 	e.GET("/coin", handlers.GetCoin)
@@ -128,15 +120,4 @@ func withdrawFunds(c echo.Context) error {
 	}
 	btcWallet.Withdraw(coinFromQuery, units)
 	return c.JSON(http.StatusOK, btcWallet)
-}
-
-func createSchema(db *pg.DB) error {
-	err := db.CreateTable(&wallet.Wallet{}, &orm.CreateTableOptions{
-		IfNotExists: true,
-	})
-	if err != nil {
-		return err
-	}
-	log.Println("Database schema created")
-	return nil
 }

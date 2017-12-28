@@ -45,7 +45,7 @@ func main() {
 
 	e.GET("/wallet", func(context echo.Context) error {
 		var wallets []wallet.Wallet
-		err = models.DB.Model(&wallets).Select()
+		err := models.DB.Model(&wallets).Select()
 		if err != nil {
 			panic(err)
 		}

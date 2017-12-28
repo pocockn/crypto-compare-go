@@ -1,8 +1,10 @@
 package wallet
 
+import "math/rand"
+
 // Wallet will hold the users coins
 type Wallet struct {
-	ID int64
+	ID int
 	// Map of Coins the key being the coin name
 	// value being the units held
 	CoinsHeld map[string]int
@@ -11,6 +13,7 @@ type Wallet struct {
 // NewWallet Create a new wallet with an intial coin and unit amount
 func NewWallet(initialCoinAndUnit map[string]int) *Wallet {
 	return &Wallet{
+		ID:        rand.Int(),
 		CoinsHeld: initialCoinAndUnit,
 	}
 }

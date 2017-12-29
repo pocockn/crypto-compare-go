@@ -1,4 +1,4 @@
-package api
+package models
 
 import (
 	"encoding/json"
@@ -6,19 +6,17 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-
-	"github.com/pocockn/crypto-compare-go/models"
 )
 
 // Response represents the response from the CryptoCompare API
 type Response struct {
 	Response string
 	Message  string
-	Data     map[string]models.Coin
+	Data     map[string]Coin
 }
 
 // FetchCoinList returns a list of coins from the Cryptocompare Api
-func FetchCoinList() map[string]models.Coin {
+func FetchCoinList() map[string]Coin {
 	url := fmt.Sprintf("https://www.cryptocompare.com/api/data/coinlist/")
 
 	fmt.Println("Requesting data from " + url)

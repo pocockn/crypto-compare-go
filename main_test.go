@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	"github.com/pocockn/crypto-compare-go/models"
-	"github.com/pocockn/crypto-compare-go/wallet"
 
 	"github.com/labstack/echo"
 	"github.com/stretchr/testify/assert"
@@ -24,7 +23,7 @@ var (
 	withdrawJSON      = `{"CoinsHeld":{"BTC":50}}`
 	depositWalletJSON = `{"CoinsHeld":{"BTC":200}}`
 
-	mockWallet = wallet.Wallet{
+	mockWallet = models.Wallet{
 		CoinsHeld: make(map[string]int),
 	}
 )

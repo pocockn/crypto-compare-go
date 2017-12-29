@@ -5,7 +5,6 @@ import (
 
 	"github.com/go-pg/pg"
 	"github.com/go-pg/pg/orm"
-	"github.com/pocockn/crypto-compare-go/wallet"
 )
 
 // DB is a global variable for accessing the DB
@@ -26,7 +25,7 @@ func InitDB() {
 }
 
 func createSchema() error {
-	err := DB.CreateTable(&wallet.Wallet{}, &orm.CreateTableOptions{
+	err := DB.CreateTable(&Wallet{}, &orm.CreateTableOptions{
 		IfNotExists: true,
 	})
 	if err != nil {

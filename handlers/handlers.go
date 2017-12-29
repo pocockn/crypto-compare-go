@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo"
-	"github.com/pocockn/crypto-compare-go/wallet"
+	"github.com/pocockn/crypto-compare-go/models"
 )
 
 // GetCoin handler that queries the Crypto Compare API for a specific coin
@@ -28,6 +28,6 @@ func CreateWallet(c echo.Context) error {
 		fmt.Println("error creating wallet")
 	}
 	coinMap[coin] = units
-	btcWallet := wallet.NewWallet(coinMap)
+	btcWallet := models.NewWallet(coinMap)
 	return c.JSON(http.StatusCreated, btcWallet)
 }

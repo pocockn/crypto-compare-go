@@ -8,9 +8,6 @@ import (
 	"github.com/pocockn/crypto-compare-go/handlers"
 	"github.com/pocockn/crypto-compare-go/models"
 
-	"github.com/pocockn/crypto-compare-go/api"
-	"github.com/pocockn/crypto-compare-go/wallet"
-
 	"math/rand"
 
 	"github.com/go-pg/pg"
@@ -44,7 +41,7 @@ func main() {
 	e.POST("/withdraw", withdrawFunds)
 
 	e.GET("/wallet", func(context echo.Context) error {
-		wallets, err := wallets.AllWallets()
+		wallets, err := models.AllWallets()
 		if err != nil {
 			panic(err)
 		}
@@ -53,7 +50,7 @@ func main() {
 
 	// Fetchs a list of coins from the cryptocompare API
 	e.GET("/allCoins", func(context echo.Context) error {
-		return context.JSON(http.StatusOK, api.FetchCoinList())
+		return context.JSON(http.StatusOK, models.FetchCoinList())
 	})
 
 	e.GET("/coin", handlers.GetCoin)
@@ -72,13 +69,13 @@ func createWallet(c echo.Context) error {
 		fmt.Println("error creating wallet")
 	}
 	coinMap[coin] = units
-	btcWallet := wallet.NewWallet(coinMap)
+	btcWallet := models.NewWallet(coinMap)
 	db := pg.Connect(&pg.Options{
 		Database: "crypto_compare",
 		User:     "pocockn",
 		Password: "only8deb",
 	})
-	wallet := &wallet.Wallet{
+	wallet := &models.Wallet{
 		ID:        rand.Int(),
 		CoinsHeld: coinMap,
 	}
@@ -99,7 +96,7 @@ func depositFunds(c echo.Context) error {
 		fmt.Println("error creating wallet")
 	}
 	coinMap[coin] = units
-	btcWallet := wallet.NewWallet(coinMap)
+	btcWallet := models.NewWallet(coinMap)
 	btcWallet.Deposit(coin, units)
 	return c.JSON(http.StatusCreated, btcWallet)
 }
@@ -111,7 +108,7 @@ func withdrawFunds(c echo.Context) error {
 	coin := "BTC"
 	units := 100
 	coinMap[coin] = units
-	btcWallet := wallet.NewWallet(coinMap)
+	btcWallet := models.NewWallet(coinMap)
 	coinFromQuery := c.QueryParam("coin")
 	units, err := strconv.Atoi(c.QueryParam("units"))
 	if err != nil {

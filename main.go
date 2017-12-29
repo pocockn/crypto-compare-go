@@ -44,8 +44,7 @@ func main() {
 	e.POST("/withdraw", withdrawFunds)
 
 	e.GET("/wallet", func(context echo.Context) error {
-		var wallets []wallet.Wallet
-		err := models.DB.Model(&wallets).Select()
+		wallets, err := wallets.AllWallets()
 		if err != nil {
 			panic(err)
 		}

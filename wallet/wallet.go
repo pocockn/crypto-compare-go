@@ -1,6 +1,10 @@
 package wallet
 
-import "math/rand"
+import (
+	"math/rand"
+
+	"github.com/pocockn/crypto-compare-go/models"
+)
 
 // Wallet will hold the users coins
 type Wallet struct {
@@ -31,4 +35,14 @@ func (wallet *Wallet) Withdraw(coin string, amount int) {
 // Deposit will deposit some units to a specific coin
 func (wallet *Wallet) Deposit(coin string, amount int) {
 	wallet.CoinsHeld[coin] += amount
+}
+
+// AllWallets returns a list of wallets from the database
+func AllWallets() ([]Wallet, error) {
+	var wallets []Wallet
+	err := models.DB.Model(&wallets).Select()
+	if err != nil {
+		return nil, err
+	}
+	return wallets, nil
 }

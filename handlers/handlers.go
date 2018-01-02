@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"crypto-compare-go/models"
+	"crypto-compare-go/persistance"
 
 	"github.com/labstack/echo"
 )
@@ -32,7 +33,7 @@ func CreateWallet(c echo.Context) error {
 		CoinsHeld: coinMap,
 	}
 
-	errDb := models.DB.Insert(wallet)
+	errDb := persistance.DB.Insert(wallet)
 	if errDb != nil {
 		panic(errDb)
 	}
@@ -42,7 +43,7 @@ func CreateWallet(c echo.Context) error {
 // GetWallet returns us a wallet from the DB via it's ID
 func GetWallet(c echo.Context) error {
 	id := c.Param("id")
-	wallet, err := models.GetWallet(id)
+	wallet, err := persistance.GetWallet(id)
 	if err != nil {
 		panic(err)
 	}
@@ -60,9 +61,9 @@ func DepositCoin(c echo.Context) error {
 		panic(err)
 	}
 
-	wallet, err := models.GetWallet(id)
+	wallet, err := persistance.GetWallet(id)
 	wallet.CoinsHeld[coin] = units
-	err = models.DB.Update(wallet)
+	err = persistance.DB.Update(wallet)
 
 	if err != nil {
 		panic(err)
@@ -71,6 +72,7 @@ func DepositCoin(c echo.Context) error {
 	return c.Redirect(301, "/wallet/"+id)
 }
 
+// WithdrawCoin withdraws units based on a coins symbol
 func WithdrawCoin(c echo.Context) error {
 	id := c.Param("id")
 	coin := c.FormValue("coin")
@@ -80,10 +82,10 @@ func WithdrawCoin(c echo.Context) error {
 		panic(err)
 	}
 
-	wallet, err := models.GetWallet(id)
+	wallet, err := persistance.GetWallet(id)
 
 	wallet.Withdraw(coin, units)
-	err = models.DB.Update(wallet)
+	err = persistance.DB.Update(wallet)
 
 	if err != nil {
 		panic(err)

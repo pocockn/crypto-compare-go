@@ -8,6 +8,7 @@ import (
 
 	"crypto-compare-go/handlers"
 	"crypto-compare-go/models"
+	"crypto-compare-go/persistance"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -24,7 +25,7 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 }
 
 func main() {
-	models.InitDB("crypto_compare")
+	persistance.InitDB("crypto_compare")
 
 	// Create a new instance of Echo
 	e := echo.New()
@@ -44,7 +45,7 @@ func main() {
 	}))
 
 	e.GET("/", func(context echo.Context) error {
-		return context.File("public/index.html")
+		return context.Render(http.StatusOK, "index.html", models.FetchCoinList())
 	})
 
 	e.POST("/createWallet", handlers.CreateWallet)
@@ -61,7 +62,7 @@ func main() {
 
 	e.GET("/wallets", func(context echo.Context) error {
 		log.Printf("Returning all wallets")
-		wallets, err := models.AllWallets()
+		wallets, err := persistance.AllWallets()
 		if err != nil {
 			panic(err)
 		}

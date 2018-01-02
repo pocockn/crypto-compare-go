@@ -1,6 +1,7 @@
-package models
+package persistance
 
 import (
+	"crypto-compare-go/models"
 	"log"
 
 	"github.com/go-pg/pg"
@@ -26,7 +27,7 @@ func InitDB(dbName string) {
 }
 
 func createSchema() error {
-	err := DB.CreateTable(&Wallet{}, &orm.CreateTableOptions{
+	err := DB.CreateTable(&models.Wallet{}, &orm.CreateTableOptions{
 		IfNotExists: true,
 	})
 	if err != nil {

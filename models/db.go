@@ -11,9 +11,9 @@ import (
 var DB *pg.DB
 
 // InitDB intialises the postgres DB and stores it in a global variable
-func InitDB() {
+func InitDB(dbName string) {
 	DB = pg.Connect(&pg.Options{
-		Database: "crypto_compare",
+		Database: dbName,
 		User:     "pocockn",
 		Password: "only8deb",
 	})
@@ -22,6 +22,7 @@ func InitDB() {
 	if err != nil {
 		panic(err)
 	}
+
 }
 
 func createSchema() error {

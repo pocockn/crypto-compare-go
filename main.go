@@ -1,27 +1,40 @@
 package main
 
 import (
-	"fmt"
+	"html/template"
+	"io"
+	"log"
 	"net/http"
-	"strconv"
 
-	"github.com/pocockn/crypto-compare-go/handlers"
-	"github.com/pocockn/crypto-compare-go/models"
+	"crypto-compare-go/handlers"
+	"crypto-compare-go/models"
 
-	"math/rand"
-
-	"github.com/go-pg/pg"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
 
+// TemplateRenderer is a custom html/template renderer for Echo framework
+type TemplateRenderer struct {
+	templates *template.Template
+}
+
+// Render renders a template document
+func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+	return t.templates.ExecuteTemplate(w, name, data)
+}
+
 func main() {
-	models.InitDB()
+	models.InitDB("crypto_compare")
 
 	// Create a new instance of Echo
 	e := echo.New()
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+
+	renderer := &TemplateRenderer{
+		templates: template.Must(template.ParseGlob("public/*.html")),
+	}
+	e.Renderer = renderer
 
 	// CORS restricted
 	// allow request from any localhost address
@@ -34,19 +47,27 @@ func main() {
 		return context.File("public/index.html")
 	})
 
-	e.GET("/createWallet", createWallet)
+	e.POST("/createWallet", handlers.CreateWallet)
 
-	e.POST("/deposit", depositFunds)
+	e.GET("/deposit/:id", func(context echo.Context) error {
+		return context.Render(http.StatusOK, "deposit.html", nil)
+	})
+	e.POST("/deposit/:id", handlers.DepositCoin)
 
-	e.POST("/withdraw", withdrawFunds)
+	e.GET("/withdraw/:id", func(context echo.Context) error {
+		return context.Render(http.StatusOK, "withdraw.html", nil)
+	})
+	e.POST("/withdraw/:id", handlers.WithdrawCoin)
 
-	e.GET("/wallet", func(context echo.Context) error {
+	e.GET("/wallets", func(context echo.Context) error {
+		log.Printf("Returning all wallets")
 		wallets, err := models.AllWallets()
 		if err != nil {
 			panic(err)
 		}
-		return context.JSON(200, wallets)
+		return context.Render(http.StatusOK, "wallets.html", wallets)
 	})
+	e.GET("/wallet/:id", handlers.GetWallet)
 
 	// Fetchs a list of coins from the cryptocompare API
 	e.GET("/allCoins", func(context echo.Context) error {
@@ -58,62 +79,4 @@ func main() {
 	// Start the web server
 	e.Start(":8000")
 
-}
-
-// CreateWallet initialises a user wallet based on one coin and some initial units
-func createWallet(c echo.Context) error {
-	coinMap := make(map[string]int)
-	coin := c.QueryParam("coin")
-	units, err := strconv.Atoi(c.QueryParam("units"))
-	if err != nil {
-		fmt.Println("error creating wallet")
-	}
-	coinMap[coin] = units
-	btcWallet := models.NewWallet(coinMap)
-	db := pg.Connect(&pg.Options{
-		Database: "crypto_compare",
-		User:     "pocockn",
-		Password: "only8deb",
-	})
-	wallet := &models.Wallet{
-		ID:        rand.Int(),
-		CoinsHeld: coinMap,
-	}
-	errDb := db.Insert(wallet)
-	if errDb != nil {
-		panic(errDb)
-	}
-	return c.JSON(http.StatusCreated, btcWallet)
-}
-
-func depositFunds(c echo.Context) error {
-	// for now lets just create a new wallet
-	// Next step is to find the wallet based on the ID and deposit to it
-	coinMap := make(map[string]int)
-	coin := c.QueryParam("coin")
-	units, err := strconv.Atoi(c.QueryParam("units"))
-	if err != nil {
-		fmt.Println("error creating wallet")
-	}
-	coinMap[coin] = units
-	btcWallet := models.NewWallet(coinMap)
-	btcWallet.Deposit(coin, units)
-	return c.JSON(http.StatusCreated, btcWallet)
-}
-
-func withdrawFunds(c echo.Context) error {
-	// for now lets just create a new wallet with a base amount
-	// And withdraw from that amount
-	coinMap := make(map[string]int)
-	coin := "BTC"
-	units := 100
-	coinMap[coin] = units
-	btcWallet := models.NewWallet(coinMap)
-	coinFromQuery := c.QueryParam("coin")
-	units, err := strconv.Atoi(c.QueryParam("units"))
-	if err != nil {
-		return c.Render(http.StatusBadRequest, "Bad request", units)
-	}
-	btcWallet.Withdraw(coinFromQuery, units)
-	return c.JSON(http.StatusOK, btcWallet)
 }

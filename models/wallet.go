@@ -2,6 +2,7 @@ package models
 
 import (
 	"math/rand"
+	"strconv"
 )
 
 // Wallet will hold the users coins
@@ -43,4 +44,16 @@ func AllWallets() ([]Wallet, error) {
 		return nil, err
 	}
 	return wallets, nil
+}
+
+// GetWallet returns us a wallet from the DB from an ID
+func GetWallet(id string) (*Wallet, error) {
+	intID, _ := strconv.Atoi(id)
+	wallet := Wallet{ID: intID}
+	err := DB.Select(&wallet)
+	if err != nil {
+		panic(err)
+	}
+
+	return &wallet, err
 }

@@ -5,20 +5,16 @@ import (
 )
 
 func TestWalletCreation(t *testing.T) {
-	coinMap := make(map[string]int)
 	expectedUnits := 100
-	coinMap["BTC"] = 100
-	btcWallet := NewWallet(coinMap)
+	btcWallet := createWallet()
 	if expectedUnits != btcWallet.CoinsHeld["BTC"] {
 		t.Error("Unexpected value, should be ", expectedUnits)
 	}
 }
 
 func TestWalletHasCorrectBalance(t *testing.T) {
-	coinMap := make(map[string]int)
 	expectedUnits := 100
-	coinMap["BTC"] = 100
-	btcWallet := NewWallet(coinMap)
+	btcWallet := createWallet()
 	actualUnits := btcWallet.SpecificBalance("BTC")
 	if expectedUnits != actualUnits {
 		t.Error("Unexpected value, should be ", expectedUnits)
@@ -26,10 +22,8 @@ func TestWalletHasCorrectBalance(t *testing.T) {
 }
 
 func TestUnitsCanBeWithDrawn(t *testing.T) {
-	coinMap := make(map[string]int)
 	expectedUnits := 50
-	coinMap["BTC"] = 100
-	btcWallet := NewWallet(coinMap)
+	btcWallet := createWallet()
 	btcWallet.Withdraw("BTC", 50)
 	actualUnits := btcWallet.SpecificBalance("BTC")
 	if expectedUnits != actualUnits {
@@ -37,14 +31,26 @@ func TestUnitsCanBeWithDrawn(t *testing.T) {
 	}
 }
 
+func TestBalanceCannotBecomeNegative(t *testing.T) {
+	btcWallet := createWallet()
+	err := btcWallet.Withdraw("BTC", 200)
+	if err == nil {
+		t.Error("Balance shouldn't be able to become negative")
+	}
+}
+
 func TestUnitsCanBeDeposited(t *testing.T) {
-	coinMap := make(map[string]int)
+	btcWallet := createWallet()
 	expectedUnits := 150
-	coinMap["BTC"] = 100
-	btcWallet := NewWallet(coinMap)
 	btcWallet.Deposit("BTC", 50)
 	actualUnits := btcWallet.SpecificBalance("BTC")
 	if expectedUnits != actualUnits {
 		t.Error("Unexpected value, should be ", expectedUnits)
 	}
+}
+
+func createWallet() *Wallet {
+	coinMap := make(map[string]int)
+	coinMap["BTC"] = 100
+	return NewWallet(coinMap)
 }

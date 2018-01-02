@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"math/rand"
 )
 
@@ -26,8 +27,13 @@ func (wallet *Wallet) SpecificBalance(coin string) int {
 }
 
 // Withdraw will take out some units from the specific coin
-func (wallet *Wallet) Withdraw(coin string, amount int) {
+func (wallet *Wallet) Withdraw(coin string, amount int) error {
+	if wallet.CoinsHeld[coin]-amount < 0 {
+		return errors.New("Coin value cannot be below 0")
+	}
 	wallet.CoinsHeld[coin] -= amount
+	return nil
+
 }
 
 // Deposit will deposit some units to a specific coin

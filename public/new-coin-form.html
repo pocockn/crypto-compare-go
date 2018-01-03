@@ -1,0 +1,13 @@
+<div class="form-group">
+    <label for="coin">Coin Symbol</label>
+    <select name="coin" class="form-control">
+        {{range .}}
+        <option class="form-control" value="{{.Symbol}}">{{.CoinName}}</option>
+        {{end}}
+    </select>
+</div>
+<div class="form-group">
+    <label for="units">Units</label>
+    <input type="number" class="form-control" id="units" name="units">
+</div>
+<button type="submit" class="btn btn-default">Create Wallet</button>

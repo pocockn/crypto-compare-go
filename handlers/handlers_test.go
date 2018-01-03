@@ -13,12 +13,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var (
-	createWalletJSON  = `{"CoinsHeld":{"btc":100}}`
-	withdrawJSON      = `{"CoinsHeld":{"BTC":50}}`
-	depositWalletJSON = `{"CoinsHeld":{"BTC":200}}`
-)
-
 func init() {
 	persistance.InitDB("crypto_compare_test")
 	persistance.DB.Exec("TRUNCATE TABLE wallets;")
@@ -38,8 +32,7 @@ func TestCreateWalletHandler(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 	if assert.NoError(t, CreateWallet(c)) {
-		assert.Equal(t, http.StatusCreated, rec.Code)
-		assert.True(t, strings.ContainsAny(rec.Body.String(), createWalletJSON))
+		assert.Equal(t, 301, rec.Code)
 	}
 }
 

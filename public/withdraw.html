@@ -5,7 +5,11 @@
             <p>Withdraw a coin from your wallet</p>
             <div class="form-group">
             <label for="coin">Coin Symbol</label>
-            <input type="text" class="form-control" id="coin" name="coin">
+            <select name="coin" class="form-control">
+                {{range $coin, $unit := .CoinsHeld}}
+                    <option class="form-control" value="{{$coin}}">{{$coin}}</option>
+                {{end}}
+            </select>
             </div>
             <div class="form-group">
             <label for="units">Units</label>

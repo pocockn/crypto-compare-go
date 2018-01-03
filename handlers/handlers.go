@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -37,7 +38,7 @@ func CreateWallet(c echo.Context) error {
 	if errDb != nil {
 		panic(errDb)
 	}
-	return c.JSON(201, wallet)
+	return c.Redirect(301, "/wallets")
 }
 
 // GetWallet returns us a wallet from the DB via it's ID
@@ -111,4 +112,16 @@ func DeleteWallet(c echo.Context) error {
 
 	return c.Redirect(301, "/wallets")
 
+}
+
+func GetPrice(c echo.Context) error {
+	symbol := c.Param("symbol")
+
+	fmt.Println(symbol)
+
+	price := models.FetchCoinPrice(symbol)
+
+	fmt.Println(price)
+
+	return c.JSON(200, price)
 }

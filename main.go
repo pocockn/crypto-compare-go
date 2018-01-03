@@ -56,10 +56,16 @@ func main() {
 	e.POST("/deposit/:id", handlers.DepositCoin)
 
 	e.GET("/withdraw/:id", func(context echo.Context) error {
-		return context.Render(http.StatusOK, "withdraw.html", nil)
+		wallet, err := persistance.GetWallet(context.Param("id"))
+		if err != nil {
+			panic(err)
+		}
+		return context.Render(http.StatusOK, "withdraw.html", wallet)
 	})
 	e.POST("/withdraw/:id", handlers.WithdrawCoin)
 	e.POST("/delete/:id", handlers.DeleteWallet)
+
+	e.GET("get-price/:symbol", handlers.GetPrice)
 
 	e.GET("/wallets", func(context echo.Context) error {
 		log.Printf("Returning all wallets")

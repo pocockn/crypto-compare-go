@@ -15,14 +15,6 @@ type Response struct {
 	Data     map[string]Coin
 }
 
-type Price struct {
-	PriceWithSymbol map[string]string
-}
-
-type PriceList struct {
-	priceList []Price
-}
-
 // FetchCoinList returns a list of coins from the Cryptocompare Api
 func FetchCoinList() map[string]Coin {
 	url := fmt.Sprintf("https://www.cryptocompare.com/api/data/coinlist/")
@@ -80,5 +72,4 @@ func FetchCoinPrice(fsym string) map[string]float64 {
 	}
 
 	return priceMap
-
 }

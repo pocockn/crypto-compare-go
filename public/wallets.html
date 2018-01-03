@@ -1,0 +1,35 @@
+{{ template "header.html" }}
+<div class="row">
+    <div class="col-md-12">
+        {{range .}}
+        <a href="/wallet/{{.ID}}">
+            <h4>Wallet ID : {{.ID}}</h4>
+        </a>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Coin</th>
+                    <th>Unit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range $coin, $unit := .CoinsHeld}}
+                <tr>
+                    <td>{{ $coin }}</td>
+                    <td>{{ $unit }}</td>
+                </tr>
+                {{ end }}
+            </tbody>
+        </table>
+        <hr> {{ end }}
+    </div>
+</div>
+</body>
+
+</html>
+
+<style>
+    .table {
+        table-layout: fixed;
+    }
+</style>

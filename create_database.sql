@@ -1,3 +1,5 @@
+create user pocockn;
+alter user pocockn superuser;
 drop database crypto_compare;
 create database crypto_compare;
 grant all privileges on database crypto_compare to pocockn;

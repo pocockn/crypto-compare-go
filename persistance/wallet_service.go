@@ -26,3 +26,16 @@ func GetWallet(id string) (*models.Wallet, error) {
 
 	return &wallet, err
 }
+
+// DeleteWallet deletes a wallet from the db
+func DeleteWallet(id string) error {
+	intID, _ := strconv.Atoi(id)
+	wallet := models.Wallet{ID: intID}
+	err := DB.Delete(&wallet)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return nil
+}

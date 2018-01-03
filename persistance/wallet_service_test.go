@@ -14,22 +14,20 @@ func init() {
 
 func TestGetWallets(t *testing.T) {
 	wallet := BootstrapWallet()
-	var wallets []models.Wallet
-	err := DB.Model(&wallets).Select()
+	allWallets, err := AllWallets()
 	if err != nil {
 		t.Error(err)
 	}
-	assert.Equal(t, &wallets[0], wallet)
+	assert.Equal(t, &allWallets[0], wallet)
 }
 
 func TestGetWallet(t *testing.T) {
 	wallet := BootstrapWallet()
-	walletToSearch := models.Wallet{ID: 1234}
-	err := DB.Select(&walletToSearch)
-	if err != nil {
-		t.Error(err)
+	walletFromDb, error := GetWallet("1234")
+	if error != nil {
+		t.Error(error)
 	}
-	assert.Equal(t, &walletToSearch, wallet)
+	assert.Equal(t, walletFromDb, wallet)
 }
 
 func TestAddSecondCoinToWallet(t *testing.T) {
@@ -43,4 +41,14 @@ func TestAddSecondCoinToWallet(t *testing.T) {
 	}
 	ethUnits := walletToSearch.CoinsHeld["ETH"]
 	assert.Equal(t, ethUnits, 400)
+}
+
+func TestDeleteWallet(t *testing.T) {
+	wallet := BootstrapWallet()
+	err := DeleteWallet("1234")
+	if err != nil {
+		t.Error(err)
+	}
+	err = DB.Select(wallet)
+	assert.Equal(t, "pg: no rows in result set", err.Error())
 }

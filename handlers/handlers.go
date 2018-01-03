@@ -84,7 +84,12 @@ func WithdrawCoin(c echo.Context) error {
 
 	wallet, err := persistance.GetWallet(id)
 
-	wallet.Withdraw(coin, units)
+	err = wallet.Withdraw(coin, units)
+
+	if err != nil {
+		return c.String(500, "Balance cannot be negative")
+	}
+
 	err = persistance.DB.Update(wallet)
 
 	if err != nil {
@@ -92,5 +97,18 @@ func WithdrawCoin(c echo.Context) error {
 	}
 
 	return c.Redirect(301, "/wallet/"+id)
+
+}
+
+// DeleteWallet deletes a wallet based on it's ID
+func DeleteWallet(c echo.Context) error {
+	id := c.Param("id")
+	err := persistance.DeleteWallet(id)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return c.Redirect(301, "/wallets")
 
 }

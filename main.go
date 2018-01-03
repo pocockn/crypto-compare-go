@@ -51,7 +51,7 @@ func main() {
 	e.POST("/createWallet", handlers.CreateWallet)
 
 	e.GET("/deposit/:id", func(context echo.Context) error {
-		return context.Render(http.StatusOK, "deposit.html", nil)
+		return context.Render(http.StatusOK, "deposit.html", models.FetchCoinList())
 	})
 	e.POST("/deposit/:id", handlers.DepositCoin)
 
@@ -59,6 +59,7 @@ func main() {
 		return context.Render(http.StatusOK, "withdraw.html", nil)
 	})
 	e.POST("/withdraw/:id", handlers.WithdrawCoin)
+	e.POST("/delete/:id", handlers.DeleteWallet)
 
 	e.GET("/wallets", func(context echo.Context) error {
 		log.Printf("Returning all wallets")

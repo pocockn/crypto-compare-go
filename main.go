@@ -77,6 +77,10 @@ func main() {
 	})
 	e.GET("/wallet/:id", handlers.GetWallet)
 
+	e.GET("/coins", func(context echo.Context) error {
+		return context.Render(http.StatusOK, "home.html", models.FetchTopCoins())
+	})
+
 	// Fetchs a list of coins from the cryptocompare API
 	e.GET("/allCoins", func(context echo.Context) error {
 		return context.JSON(http.StatusOK, models.FetchCoinList())

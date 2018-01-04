@@ -42,3 +42,50 @@ func TestCoinPrice(t *testing.T) {
 	json.Unmarshal(data, &newMap)
 	assert.Equal(t, expected, newMap)
 }
+
+func TestTopCoinList(t *testing.T) {
+	jsonData := []byte(`
+		[
+			{
+				"id": "bitcoin",
+				"name": "Bitcoin",
+				"symbol": "BTC",
+				"rank": "1",
+				"price_usd": "14832.6",
+				"price_btc": "1.0",
+				"24h_volume_usd": "19144300000.0",
+				"market_cap_usd": "248910117556",
+				"available_supply": "16781287.0",
+				"total_supply": "16781287.0",
+				"max_supply": "21000000.0",
+				"percent_change_1h": "-1.11",
+				"percent_change_24h": "-3.55",
+				"percent_change_7d": "2.05",
+				"last_updated": "1515055160"
+			}
+		]
+	`)
+
+	responseMarket := ResponseMarket{}
+
+	response := CoinMarketCapCoin{
+		ID:               "bitcoin",
+		Name:             "Bitcoin",
+		Symbol:           "BTC",
+		Rank:             "1",
+		PriceUsd:         "14832.6",
+		PriceBtc:         "1.0",
+		Two4HVolumeUsd:   "19144300000.0",
+		MarketCapUsd:     "248910117556",
+		AvailableSupply:  "16781287.0",
+		TotalSupply:      "16781287.0",
+		MaxSupply:        "21000000.0",
+		PercentChange1H:  "-1.11",
+		PercentChange24H: "-3.55",
+		PercentChange7D:  "2.05",
+		LastUpdated:      "1515055160",
+	}
+
+	json.Unmarshal(jsonData, &responseMarket.Coins)
+	assert.Equal(t, response, responseMarket.Coins[0])
+}

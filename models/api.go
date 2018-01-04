@@ -15,6 +15,10 @@ type Response struct {
 	Data     map[string]Coin
 }
 
+type ResponseMarket struct {
+	Coins []CoinMarketCapCoin
+}
+
 // FetchCoinList returns a list of coins from the Cryptocompare Api
 func FetchCoinList() map[string]Coin {
 	url := fmt.Sprintf("https://www.cryptocompare.com/api/data/coinlist/")
@@ -72,4 +76,38 @@ func FetchCoinPrice(fsym string) map[string]float64 {
 	}
 
 	return priceMap
+}
+
+func FetchTopCoins() ResponseMarket {
+	url := fmt.Sprintf("https://api.coinmarketcap.com/v1/ticker/?limit=10")
+
+	fmt.Println("Requesting data from " + url)
+
+	priceMap := ResponseMarket{}
+
+	// getting the data using http
+	request, err := http.Get(url)
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	// Read the response body using ioutil
+	body, err := ioutil.ReadAll(request.Body)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	defer request.Body.Close()
+
+	if request.StatusCode == http.StatusOK {
+		err = json.Unmarshal(body, &priceMap.Coins)
+	}
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	return priceMap
+
 }

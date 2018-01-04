@@ -1,0 +1,38 @@
+{{ template "header.html" }}
+<div class="row">
+    <div class="col-md-12">
+        <p>Top 10 Cryptocurrenies</p>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Coin</th>
+                    <th>Price (USD)</th>
+                    <th>Price (BTC)</th>
+                    <th>Market Cap (USD)</th>
+                    <th>Percentage Change (1 Week)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Coins}}
+                <tr>
+                    <td>{{ .Name }}</td>
+                    <td>{{ .PriceUsd }}</td>
+                    <td>{{ .PriceBtc }}</td>
+                    <td>{{ .MarketCapUsd }}</td>
+                    <td>{{ .PercentChange7D }}</td>
+                </tr>
+                {{ end }}
+            </tbody>
+        </table>
+        <hr>
+    </div>
+</div>
+</body>
+
+</html>
+
+<style>
+    .table {
+        table-layout: fixed;
+    }
+</style>

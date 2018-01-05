@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"crypto-compare-go/persistance"
+	"crypto-compare-go/wallet"
 
 	"github.com/labstack/echo"
 	"github.com/stretchr/testify/assert"
@@ -16,7 +17,11 @@ import (
 func init() {
 	persistance.InitDB("crypto_compare_test")
 	persistance.DB.Exec("TRUNCATE TABLE wallets;")
-	persistance.BootstrapWallet()
+	err := persistance.CreateSchema(&wallet.Wallet{})
+	if err != nil {
+		panic(err)
+	}
+	wallet.BootstrapWallet()
 }
 
 func TestCreateWalletHandler(t *testing.T) {

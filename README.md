@@ -10,6 +10,12 @@ You will need to install the following:
 
 ### Getting started
 
+Clone repo to your machine
+
+```
+https://github.com/pocockn/crypto-compare-go.git
+```
+
 To setup on the database on Mac OS X
 
 ```

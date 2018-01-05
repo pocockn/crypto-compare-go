@@ -6,9 +6,10 @@ import (
 	"log"
 	"net/http"
 
-	"crypto-compare-go/handlers"
-	"crypto-compare-go/models"
-	"crypto-compare-go/persistance"
+	"github.com/crypto-compare-go/api"
+	"github.com/crypto-compare-go/handlers"
+	"github.com/crypto-compare-go/persistance"
+	"github.com/crypto-compare-go/wallet"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -26,6 +27,11 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 
 func main() {
 	persistance.InitDB("crypto_compare")
+	err := persistance.CreateSchema(&wallet.Wallet{})
+
+	if err != nil {
+		panic(err)
+	}
 
 	// Create a new instance of Echo
 	e := echo.New()
@@ -45,18 +51,18 @@ func main() {
 	}))
 
 	e.GET("/", func(context echo.Context) error {
-		return context.Render(http.StatusOK, "index.html", models.FetchCoinList())
+		return context.Render(http.StatusOK, "index.html", api.FetchCoinList())
 	})
 
 	e.POST("/createWallet", handlers.CreateWallet)
 
 	e.GET("/deposit/:id", func(context echo.Context) error {
-		return context.Render(http.StatusOK, "deposit.html", models.FetchCoinList())
+		return context.Render(http.StatusOK, "deposit.html", api.FetchCoinList())
 	})
 	e.POST("/deposit/:id", handlers.DepositCoin)
 
 	e.GET("/withdraw/:id", func(context echo.Context) error {
-		wallet, err := persistance.GetWallet(context.Param("id"))
+		wallet, err := wallet.GetWallet(context.Param("id"))
 		if err != nil {
 			panic(err)
 		}
@@ -69,7 +75,7 @@ func main() {
 
 	e.GET("/wallets", func(context echo.Context) error {
 		log.Printf("Returning all wallets")
-		wallets, err := persistance.AllWallets()
+		wallets, err := wallet.AllWallets()
 		if err != nil {
 			panic(err)
 		}
@@ -78,12 +84,12 @@ func main() {
 	e.GET("/wallet/:id", handlers.GetWallet)
 
 	e.GET("/coins", func(context echo.Context) error {
-		return context.Render(http.StatusOK, "home.html", models.FetchTopCoins())
+		return context.Render(http.StatusOK, "home.html", api.FetchTopCoins())
 	})
 
 	// Fetchs a list of coins from the cryptocompare API
 	e.GET("/allCoins", func(context echo.Context) error {
-		return context.JSON(http.StatusOK, models.FetchCoinList())
+		return context.JSON(http.StatusOK, api.FetchCoinList())
 	})
 
 	e.GET("/coin", handlers.GetCoin)

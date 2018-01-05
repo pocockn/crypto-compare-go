@@ -1,15 +1,20 @@
-package persistance
+package wallet
 
 import (
-	"crypto-compare-go/models"
 	"testing"
+
+	"github.com/crypto-compare-go/persistance"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func init() {
-	InitDB("crypto_compare_test")
-	DB.Exec("TRUNCATE TABLE wallets;")
+	persistance.InitDB("crypto_compare_test")
+	persistance.DB.Exec("TRUNCATE TABLE wallets;")
+	err := persistance.CreateSchema(Wallet{})
+	if err != nil {
+		panic(err)
+	}
 }
 
 func TestGetWallets(t *testing.T) {
@@ -32,10 +37,10 @@ func TestGetWallet(t *testing.T) {
 
 func TestAddSecondCoinToWallet(t *testing.T) {
 	_ = BootstrapWallet()
-	walletToSearch := &models.Wallet{ID: 1234}
-	err := DB.Select(walletToSearch)
+	walletToSearch := &Wallet{ID: 1234}
+	err := persistance.DB.Select(walletToSearch)
 	walletToSearch.CoinsHeld["ETH"] = 400
-	err = DB.Update(walletToSearch)
+	err = persistance.DB.Update(walletToSearch)
 	if err != nil {
 		t.Error(err)
 	}
@@ -49,6 +54,6 @@ func TestDeleteWallet(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	err = DB.Select(wallet)
+	err = persistance.DB.Select(wallet)
 	assert.Equal(t, "pg: no rows in result set", err.Error())
 }

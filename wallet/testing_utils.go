@@ -1,16 +1,16 @@
-package persistance
+package wallet
 
-import "crypto-compare-go/models"
+import "github.com/crypto-compare-go/persistance"
 
 // BootstrapWallet adds a wallet to the database for testing purposes
-func BootstrapWallet() *models.Wallet {
+func BootstrapWallet() *Wallet {
 	coinMap := make(map[string]int)
 	coinMap["BTC"] = 100
-	wallet := &models.Wallet{
+	wallet := &Wallet{
 		ID:        1234,
 		CoinsHeld: coinMap,
 	}
-	DB.Insert(wallet)
+	persistance.DB.Insert(wallet)
 
 	return wallet
 }

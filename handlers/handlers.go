@@ -6,8 +6,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"crypto-compare-go/models"
-	"crypto-compare-go/persistance"
+	"github.com/crypto-compare-go/api"
+	"github.com/crypto-compare-go/persistance"
+	"github.com/crypto-compare-go/wallet"
 
 	"github.com/labstack/echo"
 )
@@ -29,7 +30,7 @@ func CreateWallet(c echo.Context) error {
 	}
 
 	coinMap[coin] = units
-	wallet := &models.Wallet{
+	wallet := &wallet.Wallet{
 		ID:        rand.Int(),
 		CoinsHeld: coinMap,
 	}
@@ -44,7 +45,7 @@ func CreateWallet(c echo.Context) error {
 // GetWallet returns us a wallet from the DB via it's ID
 func GetWallet(c echo.Context) error {
 	id := c.Param("id")
-	wallet, err := persistance.GetWallet(id)
+	wallet, err := wallet.GetWallet(id)
 	if err != nil {
 		panic(err)
 	}
@@ -62,7 +63,7 @@ func DepositCoin(c echo.Context) error {
 		panic(err)
 	}
 
-	wallet, err := persistance.GetWallet(id)
+	wallet, err := wallet.GetWallet(id)
 	wallet.CoinsHeld[coin] = units
 	err = persistance.DB.Update(wallet)
 
@@ -83,7 +84,7 @@ func WithdrawCoin(c echo.Context) error {
 		panic(err)
 	}
 
-	wallet, err := persistance.GetWallet(id)
+	wallet, err := wallet.GetWallet(id)
 
 	err = wallet.Withdraw(coin, units)
 
@@ -104,7 +105,7 @@ func WithdrawCoin(c echo.Context) error {
 // DeleteWallet deletes a wallet based on it's ID
 func DeleteWallet(c echo.Context) error {
 	id := c.Param("id")
-	err := persistance.DeleteWallet(id)
+	err := wallet.DeleteWallet(id)
 
 	if err != nil {
 		panic(err)
@@ -119,7 +120,7 @@ func GetPrice(c echo.Context) error {
 
 	fmt.Println(symbol)
 
-	price := models.FetchCoinPrice(symbol)
+	price := api.FetchCoinPrice(symbol)
 
 	fmt.Println(price)
 

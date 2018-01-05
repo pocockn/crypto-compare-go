@@ -1,7 +1,6 @@
 package persistance
 
 import (
-	"crypto-compare-go/models"
 	"log"
 
 	"github.com/go-pg/pg"
@@ -19,15 +18,10 @@ func InitDB(dbName string) {
 		Password: "only8deb",
 	})
 
-	err := createSchema()
-	if err != nil {
-		panic(err)
-	}
-
 }
 
-func createSchema() error {
-	err := DB.CreateTable(&models.Wallet{}, &orm.CreateTableOptions{
+func CreateSchema(model interface{}) error {
+	err := DB.CreateTable(model, &orm.CreateTableOptions{
 		IfNotExists: true,
 	})
 	if err != nil {

@@ -1,14 +1,15 @@
-package persistance
+package wallet
 
 import (
-	"crypto-compare-go/models"
 	"strconv"
+
+	"github.com/crypto-compare-go/persistance"
 )
 
 // AllWallets returns a list of wallets from the database
-func AllWallets() ([]models.Wallet, error) {
-	var wallets []models.Wallet
-	err := DB.Model(&wallets).Select()
+func AllWallets() ([]Wallet, error) {
+	var wallets []Wallet
+	err := persistance.DB.Model(&wallets).Select()
 	if err != nil {
 		return nil, err
 	}
@@ -16,10 +17,10 @@ func AllWallets() ([]models.Wallet, error) {
 }
 
 // GetWallet returns us a wallet from the DB from an ID
-func GetWallet(id string) (*models.Wallet, error) {
+func GetWallet(id string) (*Wallet, error) {
 	intID, _ := strconv.Atoi(id)
-	wallet := models.Wallet{ID: intID}
-	err := DB.Select(&wallet)
+	wallet := Wallet{ID: intID}
+	err := persistance.DB.Select(&wallet)
 	if err != nil {
 		panic(err)
 	}
@@ -30,8 +31,8 @@ func GetWallet(id string) (*models.Wallet, error) {
 // DeleteWallet deletes a wallet from the db
 func DeleteWallet(id string) error {
 	intID, _ := strconv.Atoi(id)
-	wallet := models.Wallet{ID: intID}
-	err := DB.Delete(&wallet)
+	wallet := Wallet{ID: intID}
+	err := persistance.DB.Delete(&wallet)
 
 	if err != nil {
 		panic(err)

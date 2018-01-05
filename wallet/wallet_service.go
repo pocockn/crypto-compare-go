@@ -3,7 +3,7 @@ package wallet
 import (
 	"strconv"
 
-	"github.com/crypto-compare-go/persistance"
+	"github.com/pocockn/crypto-compare-go/persistance"
 )
 
 // AllWallets returns a list of wallets from the database

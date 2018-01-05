@@ -3,7 +3,7 @@ package wallet
 import (
 	"testing"
 
-	"github.com/crypto-compare-go/persistance"
+	"github.com/pocockn/crypto-compare-go/persistance"
 
 	"github.com/stretchr/testify/assert"
 )

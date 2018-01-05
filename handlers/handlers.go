@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/crypto-compare-go/api"
-	"github.com/crypto-compare-go/persistance"
-	"github.com/crypto-compare-go/wallet"
+	"github.com/pocockn/crypto-compare-go/api"
+	"github.com/pocockn/crypto-compare-go/persistance"
+	"github.com/pocockn/crypto-compare-go/wallet"
 
 	"github.com/labstack/echo"
 )

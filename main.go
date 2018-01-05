@@ -6,10 +6,10 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/crypto-compare-go/api"
-	"github.com/crypto-compare-go/handlers"
-	"github.com/crypto-compare-go/persistance"
-	"github.com/crypto-compare-go/wallet"
+	"github.com/pocockn/crypto-compare-go/api"
+	"github.com/pocockn/crypto-compare-go/handlers"
+	"github.com/pocockn/crypto-compare-go/persistance"
+	"github.com/pocockn/crypto-compare-go/wallet"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"

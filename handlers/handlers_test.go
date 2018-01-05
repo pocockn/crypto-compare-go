@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/crypto-compare-go/persistance"
-	"github.com/crypto-compare-go/wallet"
+	"github.com/pocockn/crypto-compare-go/persistance"
+	"github.com/pocockn/crypto-compare-go/wallet"
 
 	"github.com/labstack/echo"
 	"github.com/stretchr/testify/assert"

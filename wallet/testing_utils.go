@@ -1,6 +1,6 @@
 package wallet
 
-import "github.com/crypto-compare-go/persistance"
+import "github.com/pocockn/crypto-compare-go/persistance"
 
 // BootstrapWallet adds a wallet to the database for testing purposes
 func BootstrapWallet() *Wallet {

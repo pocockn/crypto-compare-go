@@ -11,7 +11,7 @@ import (
 func init() {
 	persistance.InitDB("crypto_compare_test")
 	persistance.DB.Exec("TRUNCATE TABLE wallets;")
-	err := persistance.CreateSchema(Wallet{})
+	err := persistance.CreateSchema(&Wallet{})
 	if err != nil {
 		panic(err)
 	}

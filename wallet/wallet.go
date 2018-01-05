@@ -32,8 +32,12 @@ func (wallet *Wallet) Withdraw(coin string, amount int) error {
 		return errors.New("Coin value cannot be below 0")
 	}
 	wallet.CoinsHeld[coin] -= amount
-	return nil
 
+	// If balance is 0, remove the coin from the wallet
+	if wallet.CoinsHeld[coin] == 0 {
+		delete(wallet.CoinsHeld, coin)
+	}
+	return nil
 }
 
 // Deposit will deposit some units to a specific coin

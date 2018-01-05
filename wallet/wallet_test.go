@@ -2,6 +2,8 @@ package wallet
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestWalletCreation(t *testing.T) {
@@ -37,6 +39,13 @@ func TestBalanceCannotBecomeNegative(t *testing.T) {
 	if err == nil {
 		t.Error("Balance shouldn't be able to become negative")
 	}
+}
+
+func TestCoinIsDeletedOnceBalanceReachesZero(t *testing.T) {
+	btcWallet := createWallet()
+	btcWallet.Withdraw("BTC", 100)
+	emptyMap := make(map[string]int)
+	assert.Equal(t, btcWallet.CoinsHeld, emptyMap)
 }
 
 func TestUnitsCanBeDeposited(t *testing.T) {

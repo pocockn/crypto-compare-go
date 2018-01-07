@@ -58,17 +58,10 @@ func DepositCoin(c echo.Context) error {
 	id := c.Param("id")
 	coin := c.FormValue("coin")
 	units, err := strconv.Atoi(c.FormValue("units"))
+	err = wallet.DepositUnits(id, coin, units)
 
 	if err != nil {
-		panic(err)
-	}
-
-	wallet, err := wallet.GetWallet(id)
-	wallet.CoinsHeld[coin] = units
-	err = persistance.DB.Update(wallet)
-
-	if err != nil {
-		panic(err)
+		return err
 	}
 
 	return c.Redirect(301, "/wallet/"+id)
@@ -80,22 +73,10 @@ func WithdrawCoin(c echo.Context) error {
 	coin := c.FormValue("coin")
 	units, err := strconv.Atoi(c.FormValue("units"))
 
-	if err != nil {
-		panic(err)
-	}
-
-	wallet, err := wallet.GetWallet(id)
-
-	err = wallet.Withdraw(coin, units)
+	err = wallet.WithdrawUnits(id, coin, units)
 
 	if err != nil {
-		return c.String(500, "Balance cannot be negative")
-	}
-
-	err = persistance.DB.Update(wallet)
-
-	if err != nil {
-		panic(err)
+		return err
 	}
 
 	return c.Redirect(301, "/wallet/"+id)

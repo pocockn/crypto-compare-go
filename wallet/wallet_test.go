@@ -17,7 +17,7 @@ func TestWalletCreation(t *testing.T) {
 func TestWalletHasCorrectBalance(t *testing.T) {
 	expectedUnits := 100
 	btcWallet := createWallet()
-	actualUnits := btcWallet.SpecificBalance("BTC")
+	actualUnits, _ := btcWallet.SpecificBalance("BTC")
 	if expectedUnits != actualUnits {
 		t.Error("Unexpected value, should be ", expectedUnits)
 	}
@@ -27,7 +27,7 @@ func TestUnitsCanBeWithDrawn(t *testing.T) {
 	expectedUnits := 50
 	btcWallet := createWallet()
 	btcWallet.Withdraw("BTC", 50)
-	actualUnits := btcWallet.SpecificBalance("BTC")
+	actualUnits, _ := btcWallet.SpecificBalance("BTC")
 	if expectedUnits != actualUnits {
 		t.Error("Unexpected value, should be ", expectedUnits)
 	}
@@ -52,9 +52,17 @@ func TestUnitsCanBeDeposited(t *testing.T) {
 	btcWallet := createWallet()
 	expectedUnits := 150
 	btcWallet.Deposit("BTC", 50)
-	actualUnits := btcWallet.SpecificBalance("BTC")
+	actualUnits, _ := btcWallet.SpecificBalance("BTC")
 	if expectedUnits != actualUnits {
 		t.Error("Unexpected value, should be ", expectedUnits)
+	}
+}
+
+func TestErrorIsThrowIfCoinIsNotInWallet(t *testing.T) {
+	btcWallet := createWallet()
+	_, err := btcWallet.SpecificBalance("ETH")
+	if err == nil {
+		t.Error("ETH not found in wallet")
 	}
 }
 

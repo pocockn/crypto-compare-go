@@ -50,6 +50,7 @@ func DepositCoin(c echo.Context) error {
 	id := c.Param("id")
 	coin := c.FormValue("coin")
 	units, err := strconv.Atoi(c.FormValue("units"))
+
 	err = wallet.DepositUnits(id, coin, units)
 
 	if err != nil {

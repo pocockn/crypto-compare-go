@@ -35,9 +35,16 @@ sudo su postgres -c psql < create_database.sql
 go test ./...
 ```
 
-## Deployment
+## CI
 
-When the code is pushed to Github all tests are run automatically by Circle Ci
+When the code is pushed to Github all tests are run automatically by Circle CI
+
+## TODO:
+
+* Add a config file for the database credentials
+* Get dynamic price of coins within wallet
+* Get total worth of coins within wallet
+
 
 ## Built With
 

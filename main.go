@@ -92,8 +92,6 @@ func main() {
 		return context.JSON(http.StatusOK, api.FetchCoinList())
 	})
 
-	e.GET("/coin", handlers.GetCoin)
-
 	// Start the web server
 	e.Start(":8000")
 

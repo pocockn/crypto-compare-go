@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -12,13 +11,6 @@ import (
 
 	"github.com/labstack/echo"
 )
-
-// GetCoin handler that queries the Crypto Compare API for a specific coin
-func GetCoin(context echo.Context) error {
-	fsym := context.QueryParam("fsym")
-	tsym := context.QueryParam("tsym")
-	return context.String(http.StatusOK, fsym+tsym)
-}
 
 // CreateWallet initialises a user wallet based on one coin and some initial units
 func CreateWallet(c echo.Context) error {
@@ -96,14 +88,9 @@ func DeleteWallet(c echo.Context) error {
 
 }
 
+// GetPrice grabs the price of an individual coin from the CryptoCompare API
 func GetPrice(c echo.Context) error {
 	symbol := c.Param("symbol")
-
-	fmt.Println(symbol)
-
 	price := api.FetchCoinPrice(symbol)
-
-	fmt.Println(price)
-
 	return c.JSON(200, price)
 }

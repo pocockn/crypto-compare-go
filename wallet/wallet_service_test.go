@@ -57,3 +57,24 @@ func TestDeleteWallet(t *testing.T) {
 	err = persistance.DB.Select(wallet)
 	assert.Equal(t, "pg: no rows in result set", err.Error())
 }
+
+func TestDepositIntoWallet(t *testing.T) {
+	_ = BootstrapWallet()
+	err := DepositUnits("1234", "BTC", 50)
+	if err != nil {
+		t.Error(err)
+	}
+	walletFromDb, _ := GetWallet("1234")
+	assert.Equal(t, 150, walletFromDb.CoinsHeld["BTC"])
+	persistance.DB.Exec("TRUNCATE TABLE wallets;")
+}
+
+func TestWithdrawFromWallet(t *testing.T) {
+	_ = BootstrapWallet()
+	err := WithdrawUnits("1234", "BTC", 50)
+	if err != nil {
+		t.Error(err)
+	}
+	walletFromDb, _ := GetWallet("1234")
+	assert.Equal(t, 50, walletFromDb.CoinsHeld["BTC"])
+}

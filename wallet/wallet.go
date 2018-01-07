@@ -22,8 +22,12 @@ func NewWallet(initialCoinAndUnit map[string]int) *Wallet {
 }
 
 // SpecificBalance returns the units held for a specific coin
-func (wallet *Wallet) SpecificBalance(coin string) int {
-	return wallet.CoinsHeld[coin]
+func (wallet *Wallet) SpecificBalance(coin string) (int, error) {
+	err := wallet.isCoinInWallet(coin)
+	if err != nil {
+		return -1, err
+	}
+	return wallet.CoinsHeld[coin], nil
 }
 
 // Withdraw will take out some units from the specific coin
@@ -41,6 +45,19 @@ func (wallet *Wallet) Withdraw(coin string, amount int) error {
 }
 
 // Deposit will deposit some units to a specific coin
-func (wallet *Wallet) Deposit(coin string, amount int) {
+func (wallet *Wallet) Deposit(coin string, amount int) error {
+	err := wallet.isCoinInWallet(coin)
+	if err != nil {
+		return err
+	}
 	wallet.CoinsHeld[coin] += amount
+	return nil
+}
+
+func (wallet *Wallet) isCoinInWallet(coin string) error {
+	_, ok := wallet.CoinsHeld[coin]
+	if !ok {
+		return errors.New(coin + " not found in wallet")
+	}
+	return nil
 }

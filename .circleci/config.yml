@@ -9,7 +9,7 @@ jobs:
       - image: circleci/golang:1.8
       - image: circleci/postgres:9.4
         environment:
-          POSTGRES_USER: pocockn
+          POSTGRES_USER: crypto_user
           POSTGRES_DB: crypto_compare_test
       
     working_directory: /go/src/github.com/pocockn/crypto-compare-go 
